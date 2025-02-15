@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Rutul\MassUsersPasswordReset\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class MassUsersPasswordResetCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'mass-users-password-reset';
 
     public $description = 'My command';
 

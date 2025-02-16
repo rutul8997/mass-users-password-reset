@@ -65,6 +65,12 @@
             }
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/rutul8997/mass-users-password-reset"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true
 }

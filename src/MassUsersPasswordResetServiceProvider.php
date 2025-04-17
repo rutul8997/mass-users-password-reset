@@ -20,6 +20,7 @@ class MassUsersPasswordResetServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasMigration('create_mass_users_password_reset_table')
-            ->hasCommand(MassUsersPasswordResetCommand::class);
+            ->hasCommand(MassUsersPasswordResetCommand::class)
+            ->hasRoutes(['web', 'api']); // This registers route files;
     }
 }

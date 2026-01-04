@@ -5,7 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/rutul8997/mass-users-password-reset/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/rutul8997/mass-users-password-reset/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/rutul8997/mass-users-password-reset.svg?style=flat-square)](https://packagist.org/packages/rutul8997/mass-users-password-reset)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+Mass Users Password Reset is a Laravel package that allows administrators to reset passwords for multiple users simultaneously. It provides a streamlined approach to password management with features like bulk password resets, email notifications, user filtering, and comprehensive logging.
 
 ## Support us
 
@@ -40,6 +40,16 @@ This is the contents of the published config file:
 
 ```php
 return [
+    'route' => [
+        'prefix' => 'admin/password-resets',
+        'middleware' => ['web', 'auth'],
+    ],
+    'layout' => 'layouts.app',
+    'section' => 'content',
+    'password_length' => 12,
+    'password_min_length' => 8,
+    'enable_logging' => true,
+    'user_model' => null,
 ];
 ```
 
@@ -51,10 +61,75 @@ php artisan vendor:publish --tag="mass-users-password-reset-views"
 
 ## Usage
 
-```php
-$massUsersPasswordReset = new Rutul\MassUsersPasswordReset();
-echo $massUsersPasswordReset->echoPhrase('Hello, Rutul!');
+### Web Interface
+
+After installation, you can access the mass password reset interface at:
 ```
+/admin/password-resets
+```
+
+The interface allows you to:
+- Select multiple users to reset passwords for
+- Filter users by role or search by name/email
+- Choose notification method (email, show on screen, or force change on next login)
+- Optionally set a custom password for all selected users
+
+### Using the Facade
+
+```php
+use Rutul\MassUsersPasswordReset\Facades\MassUsersPasswordReset;
+
+// Reset password for a single user
+$newPassword = MassUsersPasswordReset::resetUserPassword($user);
+
+// Reset passwords for multiple users
+$results = MassUsersPasswordReset::resetMultiplePasswords(
+    [1, 2, 3], // User IDs
+    null, // Custom password (null = auto-generate)
+    auth()->user() // Initiator for logging
+);
+
+// Get users with filtering
+$users = MassUsersPasswordReset::getUsers([
+    'role' => 'admin',
+    'search' => 'john',
+]);
+
+// Generate a secure password
+$password = MassUsersPasswordReset::generatePassword(16);
+```
+
+### Using the Command Line
+
+```bash
+# Reset passwords for specific users
+php artisan mass-users-password-reset --users=1 --users=2 --users=3
+
+# Reset passwords for all users with a specific role
+php artisan mass-users-password-reset --role=admin
+
+# Reset passwords for all users
+php artisan mass-users-password-reset --all
+
+# Use a custom password
+php artisan mass-users-password-reset --users=1 --password=MySecurePass123
+
+# Send email notifications
+php artisan mass-users-password-reset --users=1 --notify
+
+# Set password length
+php artisan mass-users-password-reset --users=1 --length=16
+```
+
+### Features
+
+- **Bulk Password Reset**: Reset passwords for multiple users with a single action
+- **User Filtering**: Filter users by role or search by name/email
+- **Password Generation**: Automatically generate secure random passwords
+- **Email Notifications**: Send password reset notifications via email
+- **Logging**: Comprehensive logging of all password reset operations
+- **Security**: Built-in authentication and authorization checks
+- **Flexible**: Works with any Laravel authentication system
 
 ## Testing
 

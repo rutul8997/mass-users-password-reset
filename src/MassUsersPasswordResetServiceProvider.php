@@ -21,6 +21,22 @@ class MassUsersPasswordResetServiceProvider extends PackageServiceProvider
             ->hasViews()
             ->hasMigration('create_mass_users_password_reset_table')
             ->hasCommand(MassUsersPasswordResetCommand::class)
-            ->hasRoutes(['web', 'api']); // This registers route files;
+            ->hasRoutes(['web']); // This registers route files;
+    }
+
+    public function packageRegistered(): void
+    {
+        $this->app->singleton(
+            \Rutul\MassUsersPasswordReset\Services\MassPasswordResetService::class
+        );
+
+        $this->app->singleton(
+            MassUsersPasswordReset::class,
+            function ($app) {
+                return new MassUsersPasswordReset(
+                    $app->make(\Rutul\MassUsersPasswordReset\Services\MassPasswordResetService::class)
+                );
+            }
+        );
     }
 }
